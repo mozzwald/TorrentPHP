@@ -24,7 +24,12 @@ class ClientAdapter extends BaseClientAdapter
         if (!empty($ids))
         {
             $changed = array('result' => array(), 'error' => $data['error']);
-            $changed['result'][$ids[0]] = $data['result'];
+            $i = 0;
+            foreach ($ids as $thisID)
+            {
+                 $changed['result'][$i] = $data['result'][$thisID];
+                 $i++;
+            }
             $data = $changed;
         }
 
@@ -63,7 +68,7 @@ class ClientAdapter extends BaseClientAdapter
     {
         $data = json_decode($this->transport->addTorrent($path));
 
-        $torrentHash = $data->result;
+        $torrentHash = array($data->result);
 
         $torrents = $this->getTorrents($torrentHash);
 
@@ -79,7 +84,7 @@ class ClientAdapter extends BaseClientAdapter
 
         $torrentHash = (!is_null($torrent)) ? $torrent->getHashString() : $torrentId;
 
-        $torrents = $this->getTorrents($torrentHash);
+        $torrents = $this->getTorrents(array($torrentHash));
 
         return $torrents[0];
     }
@@ -93,7 +98,7 @@ class ClientAdapter extends BaseClientAdapter
 
         $torrentHash = (!is_null($torrent)) ? $torrent->getHashString() : $torrentId;
 
-        $torrents = $this->getTorrents($torrentHash);
+        $torrents = $this->getTorrents(array($torrentHash));
 
         return $torrents[0];
     }
